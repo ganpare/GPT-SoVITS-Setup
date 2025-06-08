@@ -6,6 +6,20 @@ set "SCRIPT_DIR=%~dp0"
 set "SCRIPT_DIR=%SCRIPT_DIR:~0,-1%"
 cd /d "%SCRIPT_DIR%"
 
+REM Check pyopenjtalk dictionary
+echo Checking Japanese dictionary...
+python -c "import pyopenjtalk; pyopenjtalk.g2p('テスト')" >nul 2>&1
+if %errorlevel% neq 0 (
+    echo Warning: Japanese dictionary not found. Installing...
+    python -c "import pyopenjtalk; pyopenjtalk.g2p('テスト')"
+    if %errorlevel% neq 0 (
+        echo Error: Failed to install Japanese dictionary.
+        echo Please run fix-pyopenjtalk-windows.bat first.
+        pause
+        exit /b 1
+    )
+)
+
 REM Check if runtime exists (integrated package)
 if exist "%SCRIPT_DIR%\runtime\python.exe" (
     echo Using integrated Python runtime...

@@ -73,6 +73,23 @@ powershell -File start-api.ps1 -ModelVersion v2proplus
 
 ## 🔧 トラブルシューティング
 
+### 日本語処理エラー（pyopenjtalk）
+```
+ERROR: Mecab_load() in mecab.cpp: Cannot open C:\Python\...\pyopenjtalk\open_jtalk_dic_utf_8-1.11
+```
+
+**解決方法**:
+```cmd
+# 自動修正バッチを実行
+fix-pyopenjtalk-windows.bat
+
+# または PowerShell版
+powershell -File fix-pyopenjtalk-windows.ps1
+
+# 手動で辞書をダウンロード
+python -c "import pyopenjtalk; pyopenjtalk.g2p('テスト')"
+```
+
 ### Python環境が見つからない
 ```cmd
 # Pythonのパスを確認
@@ -88,6 +105,10 @@ conda activate your_environment_name
 netstat -ano | findstr :9880
 
 # プロセスを終了
+taskkill /PID [プロセスID] /F
+
+# WebUIポート競合の場合
+netstat -ano | findstr :9874
 taskkill /PID [プロセスID] /F
 ```
 

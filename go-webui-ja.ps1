@@ -5,6 +5,25 @@ Write-Host "GPT-SoVITS WebUI (Japanese) Launcher" -ForegroundColor Green
 Write-Host "=====================================" -ForegroundColor Green
 
 Set-Location $PSScriptRoot
+
+# Check pyopenjtalk dictionary
+Write-Host "Checking Japanese dictionary..." -ForegroundColor Yellow
+try {
+    python -c "import pyopenjtalk; pyopenjtalk.g2p('テスト')" 2>$null
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "Warning: Japanese dictionary not found. Installing..." -ForegroundColor Yellow
+        python -c "import pyopenjtalk; pyopenjtalk.g2p('テスト')"
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "Error: Failed to install Japanese dictionary." -ForegroundColor Red
+            Write-Host "Please run fix-pyopenjtalk-windows.ps1 first." -ForegroundColor Yellow
+            pause
+            exit 1
+        }
+    }
+} catch {
+    Write-Host "Error checking Japanese dictionary: $_" -ForegroundColor Red
+}
+
 $runtimePath = Join-Path $PSScriptRoot "runtime"
 
 if (Test-Path "$runtimePath\python.exe") {
