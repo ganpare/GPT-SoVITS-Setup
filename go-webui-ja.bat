@@ -8,10 +8,10 @@ cd /d "%SCRIPT_DIR%"
 
 REM Check pyopenjtalk dictionary
 echo Checking Japanese dictionary...
-python -c "import pyopenjtalk; pyopenjtalk.g2p('テスト')" >nul 2>&1
+python check_pyopenjtalk.py >nul 2>&1
 if %errorlevel% neq 0 (
-    echo Warning: Japanese dictionary not found. Installing...
-    python -c "import pyopenjtalk; pyopenjtalk.g2p('テスト')"
+    echo Warning: Japanese dictionary issue detected. Running installer...
+    python check_pyopenjtalk.py
     if %errorlevel% neq 0 (
         echo Error: Failed to install Japanese dictionary.
         echo Please run fix-pyopenjtalk-windows.bat first.
