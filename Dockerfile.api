@@ -1,0 +1,18 @@
+FROM nvidia/cuda:12.6.2-cudnn8-runtime-ubuntu22.04
+
+WORKDIR /workspace
+
+RUN apt-get update && apt-get install -y \
+    python3 python3-pip git build-essential ffmpeg sox \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt extra-req.txt ./
+RUN pip3 install --upgrade pip && \
+    pip3 install -r requirements.txt && \
+    if [ -f extra-req.txt ]; then pip3 install -r extra-req.txt; fi
+
+COPY . .
+
+EXPOSE 5000
+
+CMD ["python3", "api_v2.py"] 
